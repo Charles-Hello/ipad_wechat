@@ -33,7 +33,7 @@ QRCODE_PORT = int(os.getenv("QRCODE_PORT"))
 '''
 
 if bool(os.getenv("QRCODE_EMAIL")):
-    QRCODE_EMAIL=eval(os.getenv("QRCODE_EMAIL"))
+    QRCODE_EMAIL=os.getenv("QRCODE_EMAIL").split(',')
 else:
     QRCODE_EMAIL = None
 

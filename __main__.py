@@ -159,7 +159,7 @@ def main():
     file = open(filename, "wb")
     file.write(imagedata)
     file.close()
-    Auth(port=QRCODE_PORT,email=QRCODE_EMAIL)
+    Auth(port=QRCODE_PORT,email=(QRCODE_EMAIL[0],QRCODE_EMAIL[1]))
     while True:
         time.sleep(4)
         wxid, wxnewpass = WXCheckLoginQrcode(guid, uuid)
