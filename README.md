@@ -1,5 +1,5 @@
 <h1 align="center">
-  Smell
+  IPAD_WECHAT
   <br>
   Author: 喵喵喵
 </h1>
