@@ -4,12 +4,27 @@
   Author: 喵喵喵
 </h1>
 
-## 一键搭建
-
+## docker一键搭建(requirements.txt专属)
+### 1.配置yaml(参考文章下面)
 > 进入**之前bot的目录执行(建议)**
-
+>
 ```shell
 wget https://raw.githubusercontent.com/Charles-Hello/ipad_wechat/master/bot.sh; bash bot.sh;
+```
+### 2.启动项目
+#### 1.进入容器
+```shell
+docker exec -it ipad_wechat bash
+```
+#### 2.启动项目
+```shell
+python -m ipad_wechat
+```
+
+## Macos和window本地部署
+> 进入**注意📢事项请不要使用pip install -r requirements.txt ,先python -m ipad_wechat启动。缺啥补啥**
+```shell
+git clone https://github.com/Charles-Hello/ipad_wechat.git; cd ipad_wechat;python -m ipad_wechat;
 ```
 
 ## 扫码方式①
@@ -52,7 +67,7 @@ services:
       - "30920:30920" #暴露扫码端口与下方[QRCODE_PORT]对应！默认开启30920
     environment:
       - QRCODE_PORT=30920 # 选择是否开启网页扫码端口(默认选择端口为：30920，如需更换请自行修改端口)（linux必填，其他系统可不填）
-      - QRCODE_EMAIL # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：1140***@qq.com, "防伪字符串")（可选）
+      - QRCODE_EMAIL # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140***@qq.com, 防伪字符串)（可选）
       - PROXY_IP_ADDRESS=106.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）
       - PROXY_IP_PORT=18838 #本地代理端口（必改）
       - NOLAN_URL=http://api.nolankka.top:9898/api #诺兰的swagger接口地址（诺兰接口不动就不填）
@@ -97,6 +112,8 @@ async def send_text_msg(robot_wxid, to_wxid, msg,
     async with httpx.AsyncClient() as client:
         await client.post(url=f'{API_URL}/Message/WXSendMsg', data=data.encode("utf-8"), headers=headers, timeout=None)
 ```
+
+
 ## 声明
 
 此项目仅供学习交流，若有不妥之处，侵联必删。

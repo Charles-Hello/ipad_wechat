@@ -4,14 +4,19 @@ import logging
 import os
 import sys
 import tempfile
-import cv2 as cv
-import requests
+if not os.path.exists('/.dockerenv'):
+    import cv2 as cv
+    import qrcode_terminal
+try:
+    pass
+except:
+    pass
 
 from http.server import HTTPServer
 from typing import Callable, Tuple
 import coloredlogs
 import qrcode
-import qrcode_terminal
+
 from .qrcode_api import Qrcode_api
 from .EMail import send_email
 from .LoginServer import LoginServer
@@ -87,7 +92,8 @@ class Auth(Qrcode_api):
                 self.log.info(f'请访问 http://0.0.0.0:{self._port} 扫描二维码')
                 _thread.start_new_thread(self._show_qrcode_in_web, (photo_name,))
             if self._email:
-                self._send_email(photo_name)
+                if self._email !=('None', 'None'):
+                    self._send_email(photo_name)
         else:
             qrcode_png = self._show(photo_name)
             if qrcode_png:
