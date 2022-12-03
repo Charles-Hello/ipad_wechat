@@ -4,7 +4,7 @@ import requests
 import time
 import ujson
 import schedule
-
+import os
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from typing import Any
@@ -133,14 +133,23 @@ def addserver(guid: str):
     # logger.info(right_code)
 
 def WXGetLoginQrcode(guid: str):
-    data = '{\n  "Guid": "' + guid + '"\n}'
-    response = requests.post(f'{NOLAN_URL}/Login/WXGetLoginQrcode',
-                             headers=headers, data=data)
-    data = ujson.loads(response.text)
-    # print(data)
-    qr_code_image = data['data']['qrcode']
-    uuid = data['data']['uuid']
-    return qr_code_image, uuid
+    try:
+        data = '{\n  "Guid": "' + guid + '"\n}'
+        response = requests.post(f'{NOLAN_URL}/Login/WXGetLoginQrcode',
+                                 headers=headers, data=data)
+        data = ujson.loads(response.text)
+        # print(data)
+        qr_code_image = data['data']['qrcode']
+        uuid = data['data']['uuid']
+        return qr_code_image, uuid
+    except Exception as e:
+        logging.error("代理函数报错：")
+        logging.error(e)
+        logging.error('一看就知道你代理不行！求求你赶紧部署公网吧')
+        os._exit(0)
+
+
+
 
 
 def main():
