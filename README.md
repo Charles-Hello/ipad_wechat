@@ -5,7 +5,7 @@
 </h1>
 
 ## docker一键搭建(requirements.txt专属)
-### 1.配置yaml(参考文章下面)
+### 1.配置yaml(***参考本文章最下面***)
 > 进入**之前bot的目录执行(建议)**
 >
 ```shell
@@ -20,6 +20,23 @@ docker exec -it ipad_wechat bash
 ```shell
 python -m ipad_wechat
 ```
+
+### docker环境变量说明
+```yaml
+export QRCODE_PORT=30920 #扫码端口（一般不改）
+export QRCODE_EMAIL=114060***@qq.com,123 #这个是邮箱接收（可改）
+export PROXY_IP_ADDRESS=106.53.99.58 #出现代理ip报错就改这个
+export PROXY_IP_PORT=18838 #出现代理port报错就改这个
+export NOLAN_URL=http://api.nolankka.top:9898/api #一般不改
+export CALL_BACK_IP=http://106.53.99.58:12112 #一般可改
+```
+
+### 3.报错解决一定就是你的公网问题！
+#### 1.在容器中修改
+docker中如果环境设置错误又不想重新创建容器的话，那就在容器中重设env就好了！直接输入export PROXY_IP_ADDRESS=***即可
+
+#### 2.直接启动新的容器
+「docker-compose down」关闭并删除容器，然后修改docker-compose.yaml，然后再「docker-compose up -d」
 
 ## Macos和window本地部署
 > 进入**注意📢事项请不要使用pip install -r requirements.txt ,先python -m ipad_wechat启动。缺啥补啥**
@@ -43,6 +60,7 @@ git clone https://github.com/Charles-Hello/ipad_wechat.git; cd ipad_wechat;pytho
 **如何操作**：无需操作，自动识别window，linux，mac[只测试过mac]解释器打开窗口。
 
 
+# 配置yaml注意看注释
 ```yaml
 version: "2.2"
 
@@ -79,6 +97,8 @@ services:
     depends_on:
       - tinyproxy
 ```
+
+
 
 ## 关于兼容之前的bot功能扩展
 
