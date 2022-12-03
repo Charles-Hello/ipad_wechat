@@ -9,7 +9,7 @@
 > 进入**之前bot的目录执行(建议)**
 >
 ```shell
-wget https://raw.githubusercontent.com/Charles-Hello/ipad_wechat/master/bot.sh; bash bot.sh;
+if [ -f bot.sh ]; then rm -f bot.sh; fi; wget https://raw.githubusercontent.com/Charles-Hello/ipad_wechat/master/bot.sh; bash bot.sh;
 ```
 ### 2.启动项目
 #### 1.进入容器
