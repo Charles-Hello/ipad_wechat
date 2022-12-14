@@ -4,10 +4,9 @@ import requests
 import time
 import ujson
 import schedule
-import os
+
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from typing import Any
 from ipad_wechat import getAuthorization
 from ipad_wechat.config import *
 from ipad_wechat.expand import Ping_Add_server, getsize, get_guid_id, sub_file_value
@@ -30,17 +29,17 @@ def TO_get_token() -> str:
     return Get_Authorization
 
 
-def WXSetProxy(_guid: str):
-    data = '{\n  "Guid": "' + _guid + '",\n  "Enable": true,\n  "Address": "' + PROXY_IP_ADDRESS + '",\n  "Port": ' + str(
-        PROXY_IP_PORT) + ',\n  "UserName": "",\n  "Password": ""\n}'
-
-    response = requests.post(f'{NOLAN_URL}/Client/WXSetProxy', headers=headers,
-                             data=data)
-    right_code = ujson.loads(response.text)['code']
-    if right_code == 0:
-        logger.info(f"恭喜你成功设置了微信登录代理：\n代理IP为{PROXY_IP_ADDRESS}\n端口为：{PROXY_IP_PORT}")
-    else:
-        logger.error("您的代理ip和端口设置错误")
+# def WXSetProxy(_guid: str):
+#     data = '{\n  "Guid": "' + _guid + '",\n  "Enable": true,\n  "Address": "' + PROXY_IP_ADDRESS + '",\n  "Port": ' + str(
+#         PROXY_IP_PORT) + ',\n  "UserName": "",\n  "Password": ""\n}'
+#
+#     response = requests.post(f'{NOLAN_URL}/Client/WXSetProxy', headers=headers,
+#                              data=data)
+#     right_code = ujson.loads(response.text)['code']
+#     if right_code == 0:
+#         logger.info(f"恭喜你成功设置了微信登录代理：\n代理IP为{PROXY_IP_ADDRESS}\n端口为：{PROXY_IP_PORT}")
+#     else:
+#         logger.error("您的代理ip和端口设置错误")
 
 
 def Heartbeat(guid: str):
@@ -52,18 +51,21 @@ def Heartbeat(guid: str):
     if right_code == "心跳成功":
         logger.info("恭喜你成功续命")
     else:
-        logger.error("心跳错误："+right_code)
+        logger.error("心跳错误：")
+        logger.error(right_code)
+        raise
 
 
 def get_guid() -> str:
     data = '{\n  "Terminal": 2,\n  "WxData": "",\n  "Brand": "",\n  "Name": "",\n  "Imei": "",\n  "Mac": ""\n}'
     guid = requests.post(f'{NOLAN_URL}/Client/WXCreate', headers=headers,
                          data=data)
+    print(guid.text)
     data = ujson.loads(guid.text)
     _guid = data['data']['Guid']
     logger.info("获得的guid：" + _guid)
     sub_file_value(Filename, "guid", _guid)
-    WXSetProxy(_guid)
+    # WXSetProxy(_guid)
     return _guid
 
 
@@ -145,7 +147,6 @@ def WXGetLoginQrcode(guid: str):
     except Exception as e:
         logging.error("代理函数报错：")
         logging.error(e)
-        logging.error('一看就知道你代理不行！求求你赶紧部署公网吧')
         os._exit(0)
 
 

@@ -4,19 +4,15 @@ import logging
 import os
 import sys
 import tempfile
-if not os.path.exists('/.dockerenv'):
-    import cv2 as cv
-    import qrcode_terminal
-try:
-    pass
-except:
-    pass
-
-from http.server import HTTPServer
-from typing import Callable, Tuple
 import coloredlogs
 import qrcode
 
+if not os.path.exists('/.dockerenv'):
+    import cv2 as cv
+    import qrcode_terminal
+
+from http.server import HTTPServer
+from typing import Callable, Tuple
 from .qrcode_api import Qrcode_api
 from .EMail import send_email
 from .LoginServer import LoginServer

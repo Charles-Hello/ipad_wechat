@@ -16,6 +16,7 @@ def getAuthorization() -> str:
     }
     _getAuthorization = requests.get(f'{NOLAN_URL}/Token/Create', params=params,
                                      headers=headers).text
+
     # logger.logger.info("获得的Authorization是:" + _getAuthorization)
     sub_file_value(Filename, "", _getAuthorization)
     return _getAuthorization

@@ -1,42 +1,68 @@
-<h1 align="center">
-  IPAD_WECHAT
-  <br>
-  Author: 喵喵喵
-</h1>
+
+
+<p align="center"><img width="400" height="300" src="./ipad_wechat.png" alt="ipad_wechat logo"></p>
+
+![python version](https://img.shields.io/badge/python-3.9-green)![Build](https://img.shields.io/badge/Build-PASS-brightgreen)
+
+# IPAD_WECHAT
+🚀🔥 中间服务端 👍👍
+> 文档和代码写得很详细，请仔细阅读！
+
 
 ## docker一键搭建(requirements.txt专属)
-### 1.配置yaml(***参考本文章最下面***)
+### 1.配置yaml(***参考下面***)
 > 进入**之前bot的目录执行(建议)**
->
 ```shell
 if [ -f bot.sh ]; then rm -f bot.sh; fi; wget https://raw.githubusercontent.com/Charles-Hello/ipad_wechat/master/bot.sh; bash bot.sh;
 ```
-### 2.启动项目
-#### 1.进入容器
-```shell
-docker exec -it ipad_wechat bash
+
+
+## 配置yaml注意看注释
+```yaml
+version: "2.3"
+
+services:
+  nolanchat:
+    image: hhhhzy/nolanchat:latest
+    container_name: nolanchat
+    restart: unless-stopped
+    ports:
+      - "9191:9898"  #搭建自身的wechat的api服务器接口。「①与下方对应」
+    volumes:
+      - ./Config:/app/Config
+      - ./logs:/app/logs
+    privileged: true
+
+  ipad_wechat:
+    image: 1140601003/ipad_wechat
+    container_name: ipad_wechat
+    restart: unless-stopped
+    ports:
+#      - "8022:22" #暴露ssh端口[本地docker环境——debug]
+      - "30920:30920" #暴露扫码端口与下方[QRCODE_PORT]对应！默认开启30920
+    environment:
+      - QRCODE_PORT=30920 # 选择是否开启网页扫码端口(默认选择端口为：30920，如需更换请自行修改端口)（linux必填，其他系统可不填）
+      - QRCODE_EMAIL # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140***@qq.com,123)（可选）
+#      - PROXY_IP_ADDRESS=106.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）
+#      - PROXY_IP_PORT=18838 #本地代理端口（必改）
+      - NOLAN_URL=http://127.0.0.1:9191/api #诺兰的swagger接口地址「①与上方对应」
+      - CALL_BACK_IP=http://106.53.99.58:12112  # 输入你的回调（接管信息）地址（必改）
+    volumes:
+      - ./:/root/ipad_wechat/
+    stdin_open: true
+    tty: true
+    depends_on:
+      - nolanchat
 ```
-#### 2.启动项目
-```shell
-python -m ipad_wechat
-```
+
 
 ### docker环境变量说明
 ```yaml
 export QRCODE_PORT=30920 #扫码端口（一般不改）
 export QRCODE_EMAIL=114060***@qq.com,123 #这个是邮箱接收（可改）
-export PROXY_IP_ADDRESS=106.53.99.58 #出现代理ip报错就改这个
-export PROXY_IP_PORT=18838 #出现代理port报错就改这个
-export NOLAN_URL=http://api.nolankka.top:9898/api #一般不改
-export CALL_BACK_IP=http://106.53.99.58:12112 #一般可改
+export NOLAN_URL=http://127.0.0.1:9191/api #看自身搭建的nolanchat的映射出来的ip（可改）
+export CALL_BACK_IP=http://106.53.99.58:12114 #这个是回调接口(必改)
 ```
-
-### 3.报错解决一定就是你的公网问题！
-#### 1.在容器中修改
-docker中如果环境设置错误又不想重新创建容器的话，那就在容器中重设env就好了！直接输入export PROXY_IP_ADDRESS=***即可
-
-#### 2.直接启动新的容器
-「docker-compose down」关闭并删除容器，然后修改docker-compose.yaml，然后再「docker-compose up -d」
 
 ## Macos和window本地部署
 > 进入**注意📢事项请不要使用pip install -r requirements.txt ,先python -m ipad_wechat启动。缺啥补啥**
@@ -60,50 +86,13 @@ git clone https://github.com/Charles-Hello/ipad_wechat.git; cd ipad_wechat;pytho
 **如何操作**：无需操作，自动识别window，linux，mac[只测试过mac]解释器打开窗口。
 
 
-# 配置yaml注意看注释
-```yaml
-version: "2.2"
-
-services:
-  tinyproxy:
-    image: dannydirect/tinyproxy:latest
-    container_name: tinyproxy
-    restart: unless-stopped
-    ports:
-      - "18838:8888" #这里搭建本地代理端口【与下方的PROXY_IP_PORT一样】[如果自身有自建的本地代理，这里可以把整个tinyproxy服务注释了！]
-    command:
-      - ANY
-    tty: false
-
-
-  ipad_wechat:
-    image: 1140601003/ipad_wechat
-    container_name: ipad_wechat
-    restart: unless-stopped
-    ports:
-#      - "8022:22" #暴露ssh端口[本地docker环境——debug]
-      - "30920:30920" #暴露扫码端口与下方[QRCODE_PORT]对应！默认开启30920
-    environment:
-      - QRCODE_PORT=30920 # 选择是否开启网页扫码端口(默认选择端口为：30920，如需更换请自行修改端口)（linux必填，其他系统可不填）
-      - QRCODE_EMAIL # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140***@qq.com, 防伪字符串)（可选）
-      - PROXY_IP_ADDRESS=106.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）
-      - PROXY_IP_PORT=18838 #本地代理端口（必改）
-      - NOLAN_URL=http://api.nolankka.top:9898/api #诺兰的swagger接口地址（诺兰接口不动就不填）
-      - CALL_BACK_IP=http://106.53.99.58:12112  # 输入你的回调（接管信息）地址（必改）
-    volumes:
-      - ./:/root/ipad_wechat/
-    stdin_open: true
-    tty: true
-    depends_on:
-      - tinyproxy
-```
-
 
 
 ## 关于兼容之前的bot功能扩展
 
 学习步骤：
 
+    0. 查看自身搭建的Swagger接口来编写Api：http://127.0.0.1:9191
     1. 参考server_api.py的send_text_msg；
     2. 主要变化的是data和header
     3. 兼容的修改bot类就好了

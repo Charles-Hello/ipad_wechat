@@ -33,14 +33,13 @@ QRCODE_PORT = int(os.getenv("QRCODE_PORT"))
 '''
 
 if bool(os.getenv("QRCODE_EMAIL")):
-    QRCODE_EMAIL=os.getenv("QRCODE_EMAIL").split(',')
+    QRCODE_EMAIL = os.getenv("QRCODE_EMAIL").split(',')
 else:
     QRCODE_EMAIL = None
 
-# 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]
-PROXY_IP_ADDRESS=str(os.getenv("PROXY_IP_ADDRESS"))
-PROXY_IP_PORT = int(os.getenv("PROXY_IP_PORT"))
-
+# # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]
+# PROXY_IP_ADDRESS=str(os.getenv("PROXY_IP_ADDRESS"))
+# PROXY_IP_PORT = int(os.getenv("PROXY_IP_PORT"))
 
 
 # 诺兰的swagger接口地址

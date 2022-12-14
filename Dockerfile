@@ -19,19 +19,11 @@ RUN set -x \
                              git \
                              curl \
                              wget \
-                             tzdata \
-                             perl \
-                             openssl \
-                             nginx \
-                             nodejs \
-                             jq \
                              openssh \
-                             npm \apt-utils\
-                            libgl1-mesa-glx \
-                            libglib2.0-dev\
     && rm -rf /var/cache/apk/* \
     && apk update \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo "Asia/Shanghai" > /etc/timezone \
     && pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple\
-    && cd ipad_wechat && pip install -r requirements.txt && cd ..\
+    && cd ipad_wechat && pip install -r requirements.txt && cd ..
+CMD python -m /root/ipad_wechat
