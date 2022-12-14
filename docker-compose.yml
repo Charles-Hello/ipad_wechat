@@ -8,8 +8,8 @@ services:
     ports:
       - "9191:9898"  #搭建自身的wechat的api服务器接口。「①与下方对应」
     volumes:
-      - ./Config:/app/Config
-      - ./logs:/app/logs
+      - ./NolanChat/Config:/app/Config
+      - ./NolanChat/logs:/app/logs
     privileged: true
 
   ipad_wechat:
