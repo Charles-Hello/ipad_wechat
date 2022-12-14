@@ -22,16 +22,37 @@ if [ -f bot.sh ]; then rm -f bot.sh; fi; wget https://raw.githubusercontent.com/
 version: "2.3"
 
 services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"  #搭建redis接口
+    volumes:
+      - ./redis/redis.conf:/etc/redis/redis.conf
+      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    # command: redis-server /usr/local/etc/redis/redis.conf --appendonly yes
+    networks:
+      mynet1:
+        ipv4_address: 172.100.0.2
+
   nolanchat:
     image: hhhhzy/nolanchat:latest
     container_name: nolanchat
     restart: unless-stopped
     ports:
-      - "9191:9898"  #搭建自身的wechat的api服务器接口。「①与下方对应」
+      - "9191:9898"  #搭建自身的wechat的api服务器接口。「①与下方对应」(这里的映射方便不同环境的pybot)
     volumes:
-      - ./Config:/app/Config
-      - ./logs:/app/logs
+      - ./NolanChat/Config:/app/Config
+      - ./NolanChat/logs:/app/logs
     privileged: true
+    depends_on:
+      - redis
+    networks:
+      mynet1:
+        ipv4_address: 172.100.0.3
+
 
   ipad_wechat:
     image: 1140601003/ipad_wechat
@@ -43,16 +64,25 @@ services:
     environment:
       - QRCODE_PORT=30920 # 选择是否开启网页扫码端口(默认选择端口为：30920，如需更换请自行修改端口)（linux必填，其他系统可不填）
       - QRCODE_EMAIL # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140***@qq.com,123)（可选）
-#      - PROXY_IP_ADDRESS=106.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）
-#      - PROXY_IP_PORT=18838 #本地代理端口（必改）
-      - NOLAN_URL=http://127.0.0.1:9191/api #诺兰的swagger接口地址「①与上方对应」
-      - CALL_BACK_IP=http://106.53.99.58:12112  # 输入你的回调（接管信息）地址（必改）
+      #      - PROXY_IP_ADDRESS=106.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）
+      #      - PROXY_IP_PORT=18838 #本地代理端口（必改）
+      - NOLAN_URL=http://172.100.0.3:9898/api #诺兰的swagger接口地址「①与上方对应」
+      - CALL_BACK_IP=http://106.53.99.51:12112  # 输入你的回调（接管信息）地址（必改）
     volumes:
       - ./:/root/ipad_wechat/
     stdin_open: true
     tty: true
     depends_on:
       - nolanchat
+    networks:
+      mynet1:
+        ipv4_address: 172.100.0.4
+
+networks:
+   mynet1:
+      ipam:
+         config:
+         - subnet: 172.100.0.0/16
 ```
 
 
