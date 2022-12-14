@@ -1,9 +1,9 @@
 {
-  "ConnectionStrings": {
-    "Redis": [
-      //"172.17.0.1:6379,writeBuffer=1024000",
-      //"127.0.0.1:6379,password=123,writeBuffer=1024000",
-      "test,password=123456,writeBuffer=1024000"
-    ]
+    "ConnectionStrings": {
+      "Redis": [
+        //"172.17.0.1:6379,writeBuffer=1024000",
+        //"127.0.0.1:6379,password=123,writeBuffer=1024000",
+        "172.100.0.2,writeBuffer=1024000"
+      ]
+    }
   }
-}
