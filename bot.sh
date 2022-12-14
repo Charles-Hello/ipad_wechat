@@ -134,8 +134,8 @@ dispose(){
   check_git_file
 #   _echo  "正在检查${install_service}状态!"
 #   init_check 6379
-  content=$(sed -n "28p" "$docker_yml")
-  result=$(echo $content | grep "106.53.99.58")
+  content=$(sed -n "49p" "$docker_yml")
+  result=$(echo $content | grep "106.53.99.51")
   if [[ $result != "" ]]; then
     _echo -g  "$file没有改动,请你改动一下。"
     sleep 2
