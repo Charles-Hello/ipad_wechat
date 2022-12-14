@@ -5,7 +5,7 @@ door=$dir
 file=docker-compose.yml
 project=ipad_wechat
 docker_yml=$door/$project/$file
-install_service="redis"
+# install_service="redis"
 
 
 _echo(){
@@ -84,25 +84,29 @@ _read(){
 }
 
 
-redis() {
-  local _port=$1
-  _echo -g "开始一键安装$install_service"
-  docker pull redis:latest
-  docker run -p "${_port}":6379 --name redis -v /redis/redis.conf:/etc/redis/redis.conf  -v /redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes
-  port=$(docker exec -it redis cat /etc/hosts |grep 172|awk '{print $1}')
-  check_git_file
-  sed -i "s/test/$port:6379/g" $door/$project/NolanChat/Config/Redis.json
-  _echo -g "${install_service}安装成功！"
-  cat << EOF
-**************************************
-*       安装${install_service}成功         *
-*       端口为${_port}         *
-**************************************
-EOF
-}
+# redis() {
+#   local _port=$1
+#   _echo -g "开始一键安装$install_service"
+#   docker pull redis:latest
+#   check_net=`docker network ls |grep -E 'mynet'|awk '{print $1}'`
+# #   if [ -z $check_net ]; then
+# #     docker network create --subnet=172.100.0.0/16 mynet1
+# # fi
+# #   docker run -p "${_port}":6379 --name redis -v /redis/redis.conf:/etc/redis/redis.conf  -v /redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes  --net mynet1 --ip 172.100.0.2
+# #   port=$(docker exec -it redis cat /etc/hosts |grep 172|awk '{print $1}')
+#   check_git_file
+# #   sed -i "s/test/$port:6379/g" $door/$project/NolanChat/Config/Redis.json
+#   _echo -g "${install_service}安装成功！"
+#   cat << EOF
+# **************************************
+# *       安装${install_service}成功         *
+# *       端口为${_port}         *
+# **************************************
+# EOF
+# }
 
 check_git_file(){
-  if [ ! -d "/$project" ]; then
+  if [ -d "/$project/" ]; then
   _echo "检测到ipad_wechat文件不存在，正在拉取！"
   git clone https://github.com/Charles-Hello/ipad_wechat.git
 else
@@ -128,8 +132,8 @@ fi
 
 dispose(){
   check_git_file
-  _echo  "正在检查${install_service}状态!"
-  init_check 6379
+#   _echo  "正在检查${install_service}状态!"
+#   init_check 6379
   content=$(sed -n "28p" "$docker_yml")
   result=$(echo $content | grep "106.53.99.58")
   if [[ $result != "" ]]; then
@@ -192,19 +196,16 @@ main() {
  ██║██╔═══╝ ██╔══██║██║  ██║╚════╝██║███╗██║██╔══╝  ██║     ██╔══██║██╔══██║   ██║
  ██║██║     ██║  ██║██████╔╝      ╚███╔███╔╝███████╗╚██████╗██║  ██║██║  ██║   ██║
  ╚═╝╚═╝     ╚═╝  ╚═╝╚═════╝        ╚══╝╚══╝ ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝
-
 EOF
     echo "请选择您需要进行的操作:"
     echo "  1) 安装ipad_wechat(一把梭)"
-    echo "  2) 安装redis"
-    echo "  3) 退出脚本"
+    echo "  2) 退出脚本"
     echo ""
     echo -n "请输入编号: "
     read N
     case $N in
       1) dispose ;;
-      2) redis 6379 ;;
-      3) exit ;;
+      2) exit ;;
       *) echo "输入错误！请重新 bash ${name}.sh 启动脚本" ;;
     esac
 }
