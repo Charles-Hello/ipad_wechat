@@ -1,6 +1,6 @@
 
 
-<p align="center"><img width="400" height="300" src="./ipad_wechat.png" alt="ipad_wechat logo"></p>
+<p align="center"><img width="400" height="300" src="./ipad_wechat.png" alt="ipad_wechat logo"></p>
 
 ![python version](https://img.shields.io/badge/python-3.9-green)![Build](https://img.shields.io/badge/Build-PASS-brightgreen)
 
