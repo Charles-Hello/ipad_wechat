@@ -84,36 +84,37 @@ _read(){
 }
 
 
-# redis() {
-#   local _port=$1
-#   _echo -g "开始一键安装$install_service"
-#   docker pull redis:latest
-#   check_net=`docker network ls |grep -E 'mynet'|awk '{print $1}'`
-# #   if [ -z $check_net ]; then
-# #     docker network create --subnet=172.100.0.0/16 mynet1
-# # fi
-# #   docker run -p "${_port}":6379 --name redis -v /redis/redis.conf:/etc/redis/redis.conf  -v /redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes  --net mynet1 --ip 172.100.0.2
-# #   port=$(docker exec -it redis cat /etc/hosts |grep 172|awk '{print $1}')
-#   check_git_file
-# #   sed -i "s/test/$port:6379/g" $door/$project/NolanChat/Config/Redis.json
-#   _echo -g "${install_service}安装成功！"
-#   cat << EOF
-# **************************************
-# *       安装${install_service}成功         *
-# *       端口为${_port}         *
-# **************************************
-# EOF
-# }
+redis() {
+  local _port=$1
+  _echo -g "开始一键安装$install_service"
+  docker pull redis:latest
+  # check_net=`docker network ls |grep -E 'mynet'|awk '{print $1}'`
+#   if [ -z $check_net ]; then
+#     docker network create --subnet=172.100.0.0/16 mynet1
+# fi
+  check_git_file
+  docker run -p "${_port}":6379 --name redis -v /redis/redis.conf:/etc/redis/redis.conf  -v /redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes
+#   port=$(docker exec -it redis cat /etc/hosts |grep 172|awk '{print $1}')
+
+#   sed -i "s/test/$port:6379/g" $door/$project/NolanChat/Config/Redis.json
+  _echo -g "${install_service}安装成功！"
+  cat << EOF
+**************************************
+*       安装${install_service}成功         *
+*       端口为${_port}         *
+**************************************
+EOF
+}
 
 check_git_file(){
-  if [ -d "/$project/" ]; then
+  if [ ! -d "/$project/" ]; then
   _echo "检测到ipad_wechat文件不存在，正在拉取！"
   git clone https://github.com/Charles-Hello/ipad_wechat.git
 else
   _read "检测到ipad_wechat文件已存在，是否还需要拉取更新最新版本(默认: n) [y/n]: "
   local get_input="${inputInfo}"
   [ -z "${get_input}" ] && get_input="N"
-  case "${yn:0:1}" in
+  case "${get_input:0:1}" in
       y|Y)
           _echo -g "正在为你拉取最新最新库"
           rm -rf ipad_wechat
@@ -121,7 +122,6 @@ else
           ;;
       n|N)
           _echo -e "取消拉取最新库"
-          exit 1
           ;;
       *)
           _echo -e "输入有误，请重新输入!"
@@ -134,11 +134,13 @@ dispose(){
   check_git_file
 #   _echo  "正在检查${install_service}状态!"
 #   init_check 6379
-  content=$(sed -n "49p" "$docker_yml")
+  content=$(sed -n "47p" "$docker_yml")
   result=$(echo $content | grep "106.53.99.51")
   if [[ $result != "" ]]; then
     _echo -g  "$file没有改动,请你改动一下。"
-    sleep 2
+    sleep 1
+    _echo -g  "$file修改完了之后，直接再次运行一键命令即可"
+    sleep 3
     vi "$docker_yml"
   else
     _echo -g  "检测到已经改动$file内容"
@@ -158,8 +160,10 @@ init_check(){
   local port=6379
 if ! check_port_occupy "${port}"; then
   _echo -g "${port}$install_service默认端口没有被占用"
-  echo "速度决定！！！你还有${time}秒钟考虑，如果决定放弃，按CTRL+C。继续则帮你安装$install_service。"
+  echo "速度决定！！！你还有${time}秒钟考虑，如果决定放弃，按CTRL+C。继续则帮你安装$install_service"
   sleep ${time}
+  _read "请输入你想要安装$install_service的端口: "
+  local _port_="${inputInfo}"
   redis 6379
 else
   _read "检测到$install_service默认${port}端口被占用，是否还需要安装$install_service(默认: n) [y/n]: "
