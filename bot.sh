@@ -107,7 +107,7 @@ EOF
 }
 
 check_git_file(){
-  if [ ! -d "/$project/" ]; then
+  if [ ! -d "$project" ]; then
   _echo "检测到ipad_wechat文件不存在，正在拉取！"
   git clone https://github.com/Charles-Hello/ipad_wechat.git
 else
