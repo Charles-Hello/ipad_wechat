@@ -148,10 +148,14 @@ dispose(){
     _echo -g  "开始搭建ipad_wechat"
     docker-compose up -d
     docker-compose logs #以后写check
-    sleep 2
-    docker exec -it ipad_wechat nohup python3 -m ipad_wechat > /root/bot.log 2>&1 &
-    docker exec -it ipad_wechat cat /root/nohup.out
+    echo ""
     _echo -g  "ipad_wechat已搭建完成！"
+    echo ""
+    _echo -g "根据提示输入命令进入容器，再次输入以下命令执行，登陆成功后CTRL+c退出即可"
+    _echo -g  "docker exec -it ipad_wechat bash "
+    _echo -g  "nohup  python3 -m ipad_wechat  > wechat.log  2>&1 &"
+    _echo -g "tail -f wechat.log"
+
   fi
 }
 
