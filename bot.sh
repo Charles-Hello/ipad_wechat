@@ -149,7 +149,8 @@ dispose(){
     docker-compose up -d
     docker-compose logs #以后写check
     sleep 2
-    docker exec -it ipad_wechat python3 -m ipad_wechat
+    docker exec -it ipad_wechat nohup python3 -m ipad_wechat > /root/bot.log 2>&1 &
+    docker exec -it ipad_wechat cat /root/nohup.out
     _echo -g  "ipad_wechat已搭建完成！"
   fi
 }
