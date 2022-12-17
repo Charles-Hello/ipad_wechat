@@ -42,9 +42,9 @@ services:
       - "30920:30920" #暴露扫码端口与下方[QRCODE_PORT]对应！默认开启30920(一般不改，自定义忽略)
     environment:
       - QRCODE_PORT=30920 # 选择是否开启网页扫码端口(默认选择端口为：30920，如冲突请自行修改端口)
-#      - QRCODE_EMAIL=1140***@qq.com,123 # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140***@qq.com,123)（可选,需要则开启注释）
+      - QRCODE_EMAIL=None,None # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140301003@qq.com,123)（可选,需要则修改none）
       - NOLAN_URL=http://172.100.0.3:9898/api #搭建自身的wechat的api接口地址「①与上方对应」（一般不改，如改则只需修改ip即可。无需改端口）
-      - CALL_BACK_IP=http://106.53.99.51:12112  # 输入你的回调（接管信息）地址（必改）
+      - CALL_BACK_IP=http://127.53.99.51:12112  # 输入你的回调（接管信息）地址（必改）
     volumes:
       - ./:/root/ipad_wechat/
     stdin_open: true
