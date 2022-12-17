@@ -148,6 +148,7 @@ dispose(){
     _echo -g  "开始搭建ipad_wechat"
     docker-compose up -d
     docker-compose logs #以后写check
+    sleep 2
     docker exec -it ipad_wechat python3 -m ipad_wechat
     _echo -g  "ipad_wechat已搭建完成！"
   fi
