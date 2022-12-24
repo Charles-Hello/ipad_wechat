@@ -1,5 +1,11 @@
 
 import os
+import sys
+if "tg_bot" not in str(sys.argv[0]):
+    from ipad_wechat.expand import  get_redis_ip_port
+else:
+    from expand import  get_redis_ip_port
+
 # ----------非大佬一般不用动！👇🏻--------------#
 # 获取ToKen的密码
 ToKen_Password = "aa123456"
@@ -16,6 +22,11 @@ Token_cycle = 3600
 # 心跳检测时间周期(默认为20s一次)
 Heartbeat_cycle = 20
 
+# redis的服务ip地址
+Redis_ip = get_redis_ip_port('docker-compose.yml') or "127.0.0.1"  #自定义的话，把这里的127.0.0.1改写自身的redis的ip
+
+# redis的服务port端口
+Redis_port = 6379 #自定义的话，把这里的6379改写自身的redis的port。不过一般都是6379为redis默认端口
 
 # -----------非大佬一般不用动！👆🏻--------------#
 
@@ -32,14 +43,19 @@ QRCODE_PORT = int(os.getenv("QRCODE_PORT"))
                         所以收到登录邮件后, 一定要对比确认防伪字符串和你设置一致才可扫码登录, 否则将导致: 包括但不限于微信数据泄露.
 '''
 
-if bool(os.getenv("QRCODE_EMAIL")):
+if os.getenv("QRCODE_EMAIL") != "true,true":
     QRCODE_EMAIL = os.getenv("QRCODE_EMAIL").split(',')
 else:
-    QRCODE_EMAIL = None
+    QRCODE_EMAIL = ("None", "None")
 
-# # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]
-# PROXY_IP_ADDRESS=str(os.getenv("PROXY_IP_ADDRESS"))
-# PROXY_IP_PORT = int(os.getenv("PROXY_IP_PORT"))
+# 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]
+OPEN_PROXY = os.getenv("OPEN_PROXY")
+if OPEN_PROXY != "true":
+    PROXY_IP_ADDRESS = str(os.getenv("PROXY_IP_ADDRESS"))
+    PROXY_IP_PORT = int(os.getenv("PROXY_IP_PORT"))
+
+# 是否启动bot控制
+TGBOT = str(os.getenv("TGBOT"))
 
 
 # 诺兰的swagger接口地址
@@ -53,3 +69,5 @@ Filename = "token.txt"
 
 # # 是否开启报错debug分享（默认为ture）
 # Debug_feedback = True
+
+

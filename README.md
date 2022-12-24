@@ -24,6 +24,7 @@ version: "2.3"
 #注意看注释。
 
 services:
+  #如果不需要则自行注释相关代码
   redis:
     image: redis:latest
     container_name: redis
@@ -32,28 +33,27 @@ services:
       - ./redis/redis.conf:/etc/redis/redis.conf
       - ./redis/data:/data
       - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
-#    ports:
-#      - "9191:9898"  #搭建自身的reids仅仅为nolanwechat服务。「①与下方对应」需要则自己开启注释(一般不改，自定义忽略)
+    ports:
+      - "19736:6379" #开启redis端口，如自定义可注释
     networks:
       mynet1:
-        ipv4_address: 172.100.0.2  #如果冲突则填写其他的字段或尾数(一般不改，自定义忽略)
+        ipv4_address: 172.100.0.2 #如果冲突则填写其他的字段或尾数(一般不改，自定义请注释)
 
   nolanchat:
     image: hhhhzy/nolanchat:latest
     container_name: nolanchat
     restart: unless-stopped
     ports:
-      - "9191:9898"  #搭建自身的wechat的api服务器接口。「①与下方对应」(这里的映射方便不同环境的pybot进行玩耍) (如冲突请自行修改端口。一般不改，自定义忽略)
+      - "9191:9898" #搭建自身的wechat的api服务器接口。「①与下方对应」(这里的映射方便不同环境的py_bot进行玩耍) (如冲突请自行修改端口。一般不改，自定义请注释)
     volumes:
       - ./NolanChat/Config:/app/Config
       - ./NolanChat/logs:/app/logs
     privileged: true
     depends_on:
-      - redis
+      - redis 
     networks:
       mynet1:
         ipv4_address: 172.100.0.3 #如果冲突则填写其他的字段或尾数(一般不改，自定义忽略)
-
 
   ipad_wechat:
     image: 1140601003/ipad_wechat
@@ -63,9 +63,13 @@ services:
       - "30920:30920" #暴露扫码端口与下方[QRCODE_PORT]对应！默认开启30920(一般不改，自定义忽略)
     environment:
       - QRCODE_PORT=30920 # 选择是否开启网页扫码端口(默认选择端口为：30920，如冲突请自行修改端口)
-      - QRCODE_EMAIL=None,None # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为None(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140301003@qq.com,123)（可选,需要则修改none）
+      - QRCODE_EMAIL=false,false # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为false(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140301003@qq.com,123)（可选,需要则修改false）
       - NOLAN_URL=http://172.100.0.3:9898/api #搭建自身的wechat的api接口地址「①与上方对应」（一般不改，如改则只需修改ip即可。无需改端口）
-      - CALL_BACK_IP=http://127.53.99.51:12112  # 输入你的回调（接管信息）地址（必改）
+      - CALL_BACK_IP=http://1212.53.99.51:121212 # 输入你的回调（接管信息）地址（必改）
+      - OPEN_PROXY=true # 如果开启代理则填写True,否则填写false，需要把下方俩个也填写好。下方俩个也要填写正确。如果填写false，下面俩个PROXY忽略无视就好
+      - PROXY_IP_ADDRESS=213.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）(代理为true时则填写)
+      - PROXY_IP_PORT=12121 #本地代理端口（必改）(代理为true时则填写)
+      - TGBOT=true #是否启动tgbot控制(为true时则启动，否则则为false)
     volumes:
       - ./:/root/ipad_wechat/
     stdin_open: true
@@ -74,14 +78,13 @@ services:
       - nolanchat
     networks:
       mynet1:
-        ipv4_address: 172.100.0.4  #如果冲突则填写其他的字段或尾数(一般不改，自定义忽略)
+        ipv4_address: 172.100.0.4 #如果冲突则填写其他的字段或尾数(一般不改，自定义忽略)
 
 networks:
-   mynet1:
-      ipam:
-         config:
-         - subnet: 172.100.0.0/16  #如果冲突则填写其他的字段(一般不改，自定义忽略)
-
+  mynet1:
+    ipam:
+      config:
+        - subnet: 172.100.0.0/16 #如果冲突则填写其他的字段(一般不改，自定义忽略)
 
 ```
 
@@ -92,6 +95,10 @@ export QRCODE_PORT=30920 #扫码端口（一般不改）
 export QRCODE_EMAIL=114060***@qq.com,123 #这个是邮箱接收（可改）
 export NOLAN_URL=http://127.0.0.1:9191/api #看自身搭建的nolanchat的映射出来的ip（可改）
 export CALL_BACK_IP=http://106.53.99.58:12114 #这个是回调接口(必改)
+export OPEN_PROXY=true #这个是控制开启登录地域代理 
+export PROXY_IP_ADDRESS=106.53.99.58 #登录地域代理的ip
+export PROXY_IP_PORT=18838  #登录地域代理的端口
+export TGBOT=true #是否开启tgbot
 ```
 
 ## Macos和window本地部署

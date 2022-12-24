@@ -38,5 +38,3 @@ def send_email(
         except smtplib.SMTPServerDisconnected:
             time.sleep(i * 3)
     raise f'邮件发送失败 {receiver}'
-
-

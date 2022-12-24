@@ -28,8 +28,6 @@ class Auth(Qrcode_api):
     _EMAIL_HOST = 'smtp.qq.com'
     _EMAIL_PORT = 465
 
-
-
     def __init__(
             self, name: str = 'ipad',
             show: Callable[[str], None] = None,
@@ -86,9 +84,10 @@ class Auth(Qrcode_api):
             if self._port:
                 # noinspection HttpUrlsUsage
                 self.log.info(f'请访问 http://0.0.0.0:{self._port} 扫描二维码')
-                _thread.start_new_thread(self._show_qrcode_in_web, (photo_name,))
+                _thread.start_new_thread(
+                    self._show_qrcode_in_web, (photo_name,))
             if self._email:
-                if self._email !=('None', 'None'):
+                if self._email != ('false', 'false'):
                     self._send_email(photo_name)
         else:
             qrcode_png = self._show(photo_name)
@@ -121,7 +120,6 @@ class Auth(Qrcode_api):
 
     @staticmethod
     def _show_qrcode_in_window(filename: str):
-
 
         img = cv.imread(filename)
         cv.imshow('image', img)
