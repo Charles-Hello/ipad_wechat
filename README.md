@@ -4,20 +4,20 @@
 
 ![python version](https://img.shields.io/badge/python-3.9-green)![Build](https://img.shields.io/badge/Build-PASS-brightgreen)
 
-# IPAD_WECHAT
+# IPAD_WECHAT &#x1F308;
 🚀🔥 中间服务端 👍👍
 > 文档和代码写得很详细，请仔细阅读！
 
 
-## docker一键搭建(requirements.txt专属)
-### 1.配置yaml(***参考下面***)
-> 进入**之前bot的目录执行(建议)**
+## Docker一键搭建  &#x1F31F;
+### 1.配置yaml(***参考下面***) &#x1F33A;
+
 ```shell
 if [ -f bot.sh ]; then rm -f bot.sh; fi; wget https://raw.githubusercontent.com/Charles-Hello/ipad_wechat/master/bot.sh; bash bot.sh;
 ```
 
 
-## 配置yaml注意看注释
+## 配置yaml注意看注释 &#x1F6A8;
 ```yaml
 version: "2.3"
 
@@ -66,7 +66,7 @@ services:
       - QRCODE_EMAIL=false,false # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为false(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140301003@qq.com,123)（可选,需要则修改false）
       - NOLAN_URL=http://172.100.0.3:9898/api #搭建自身的wechat的api接口地址「①与上方对应」（一般不改，如改则只需修改ip即可。无需改端口）
       - CALL_BACK_IP=http://1212.53.99.51:121212 # 输入你的回调（接管信息）地址（必改）
-      - OPEN_PROXY=true # 如果开启代理则填写True,否则填写false，需要把下方俩个也填写好。下方俩个也要填写正确。如果填写false，下面俩个PROXY忽略无视就好
+      - OPEN_PROXY=true # 如果开启代理则填写true,否则填写false，需要把下方俩个也填写好。下方俩个也要填写正确。如果填写false，下面俩个PROXY忽略无视就好
       - PROXY_IP_ADDRESS=213.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）(代理为true时则填写)
       - PROXY_IP_PORT=12121 #本地代理端口（必改）(代理为true时则填写)
       - TGBOT=true #是否启动tgbot控制(为true时则启动，否则则为false)
@@ -89,7 +89,7 @@ networks:
 ```
 
 
-### docker环境变量说明
+### docker环境变量说明 &#x1F6A9;
 ```yaml
 export QRCODE_PORT=30920 #扫码端口（一般不改）
 export QRCODE_EMAIL=114060***@qq.com,123 #这个是邮箱接收（可改）
@@ -101,31 +101,41 @@ export PROXY_IP_PORT=18838  #登录地域代理的端口
 export TGBOT=true #是否开启tgbot
 ```
 
-## Macos和window本地部署
+## Macos和window本地部署 
 > 进入**注意📢事项请不要使用pip install -r requirements.txt ,先python -m ipad_wechat启动。缺啥补啥**
 ```shell
 git clone https://github.com/Charles-Hello/ipad_wechat.git; cd ipad_wechat;python -m ipad_wechat;
 ```
+<br>
 
-## 扫码方式①
+### 邮箱扫码
 
-## 发送登录二维码到邮箱
+>### 发送登录二维码到邮箱 &#x1F618;
 **最佳实践**：建议将邮箱绑定到微信，这样能实时收到提醒，登录过期后也可以第一时间收到登录请求。
 
 **安全性问题**：虽然自带公开邮箱，但是他人并不能通过这个获取任何人发送的邮件，所以 防伪字符串 策略是安全的。
+<br>
+<br>
+### 网页扫码
 
-## 扫码方式②
-
-## 填写IP:Port访问（推荐）
+>### 填写IP:Port访问（推荐）&#x1F60D;
 **如何操作**：认真填写下方的docker-compose.yml即可！都有注释。
-
-## 扫码方式③(不太推荐,只测试过mac可行)
+<br>
+<br>
+### 本地扫码(不太推荐,只测试过mac)
+>### 本地解释器扫码  &#x1F605;
 **如何操作**：无需操作，自动识别window，linux，mac[只测试过mac]解释器打开窗口。
+<br>
+<br>
+### TG机器人扫码
 
+>### tg_bot扫码（推荐）&#x1F603;
+**如何操作**：认真填写下方的docker-compose.yml和修改bot.json即可！都有注释。
 
+<br>
+<br>
 
-
-## 关于兼容之前的bot功能扩展
+## 关于兼容之前的bot功能扩展 &#x1F633;
 
 学习步骤：
 
@@ -135,6 +145,8 @@ git clone https://github.com/Charles-Hello/ipad_wechat.git; cd ipad_wechat;pytho
     3. 兼容的修改bot类就好了
     4. 目前我只测试好了send_text_msg函数(ps：由于学业(看剧)繁忙：你们其他函数的自己慢慢写就好。需要啥写啥。)
     5. 目前还差白嫖的功能：加好友。进群。图片
+
+<br>
 
 ```python
 async def send_text_msg(robot_wxid, to_wxid, msg,

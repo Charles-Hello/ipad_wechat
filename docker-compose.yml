@@ -45,7 +45,7 @@ services:
       - QRCODE_EMAIL=false,false # 选择是否开启邮箱接收(输入你的邮箱地址，邮箱默认为false(代表不发送，反之则一定执行邮箱发送图片)，例如：QRCODE_EMAIL=1140301003@qq.com,123)（可选,需要则修改false）
       - NOLAN_URL=http://172.100.0.3:9898/api #搭建自身的wechat的api接口地址「①与上方对应」（一般不改，如改则只需修改ip即可。无需改端口）
       - CALL_BACK_IP=http://1212.53.99.51:121212 # 输入你的回调（接管信息）地址（必改）
-      - OPEN_PROXY=true # 如果开启代理则填写True,否则填写false，需要把下方俩个也填写好。下方俩个也要填写正确。如果填写false，下面俩个PROXY忽略无视就好
+      - OPEN_PROXY=true # 如果开启代理则填写true,否则填写false，需要把下方俩个也填写好。下方俩个也要填写正确。如果填写false，下面俩个PROXY忽略无视就好
       - PROXY_IP_ADDRESS=213.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）(代理为true时则填写)
       - PROXY_IP_PORT=12121 #本地代理端口（必改）(代理为true时则填写)
       - TGBOT=true #是否启动tgbot控制(为true时则启动，否则则为false)
