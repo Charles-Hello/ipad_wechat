@@ -14,12 +14,12 @@ RUN set -x \
     && apk update -f \
     && apk upgrade \
     && apk --no-cache add -f bash \
-                             coreutils \
-                             moreutils \
-                             git \
-                             curl \
-                             wget \
-                             openssh \
+    coreutils \
+    moreutils \
+    git \
+    curl \
+    wget \
+    openssh \
     && rm -rf /var/cache/apk/* \
     && apk update \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
