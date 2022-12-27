@@ -31,11 +31,12 @@ def getAuthorization() -> str:
 
 
 class My_Redis:
-    def __init__(self, host: str, port: int):
+    def __init__(self, host: str, port: int,password=None):
+      if password is None:
         self.r = redis.StrictRedis(host=host, port=port, decode_responses=True)
-        self.host = host
-        self.port = port
-
+      else:
+        self.r = redis.StrictRedis(host=host, port=port,password=password, decode_responses=True)
+        
     def Redis_pipe(self, key: str) -> str:
         with self.r.monitor() as m:
             for command in m.listen():

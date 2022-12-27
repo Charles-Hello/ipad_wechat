@@ -1,10 +1,7 @@
 
 import os
 import sys
-if "tg_bot" not in str(sys.argv[0]):
-    from ipad_wechat.expand import  get_redis_ip_port
-else:
-    from expand import  get_redis_ip_port
+
 
 # ----------非大佬一般不用动！👇🏻--------------#
 # 获取ToKen的密码
@@ -23,10 +20,14 @@ Token_cycle = 3600
 Heartbeat_cycle = 20
 
 # redis的服务ip地址
-Redis_ip = get_redis_ip_port('docker-compose.yml') or "127.0.0.1"  #自定义的话，把这里的127.0.0.1改写自身的redis的ip
+Redis_ip = os.getenv("REDIS_IP")  or "172.100.0.2"
 
 # redis的服务port端口
-Redis_port = 6379 #自定义的话，把这里的6379改写自身的redis的port。不过一般都是6379为redis默认端口
+Redis_port = os.getenv("REDIS_PROT") or 6379
+
+# redis的服务password密码
+Redis_pass = os.getenv("REDIS_PASS") or False
+
 
 # -----------非大佬一般不用动！👆🏻--------------#
 

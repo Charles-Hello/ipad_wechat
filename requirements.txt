@@ -21,3 +21,4 @@ tzdata==2022.7
 tzlocal==4.2
 ujson==5.6.0
 urllib3==1.26.13
+python-socks==1.1.1

@@ -70,6 +70,10 @@ services:
       - PROXY_IP_ADDRESS=213.53.99.58 # 输入你微信代理地区地址和端口(决定你的微信登录的城市)[ps:关于内网的话，需要找个公网穿透出来除非本身就是公网。]（必改）(代理为true时则填写)
       - PROXY_IP_PORT=12121 #本地代理端口（必改）(代理为true时则填写)
       - TGBOT=true #是否启动tgbot控制(为true时则启动，否则则为false)
+      #这里是自定义redis配置
+      # - REDIS_IP=127.0.0.1 #redis的ip地址(仅为自定义使用，如果需要则关闭注释，默认忽略)
+      # - REDIS_PROT=6379 #redis的端口(仅为自定义使用，如果需要则关闭注释，默认忽略)
+      # - REDIS_PASS=123456 #redis的密码(仅为自定义使用，如果需要则关闭注释，默认忽略)
     volumes:
       - ./:/root/ipad_wechat/
     stdin_open: true

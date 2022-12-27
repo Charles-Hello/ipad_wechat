@@ -33,7 +33,7 @@ def main():
     Auth(port=QRCODE_PORT, email=(QRCODE_EMAIL[0], QRCODE_EMAIL[1]))
     while True:
         time.sleep(2)
-        i = My_Redis(host=Redis_ip[0],port=Redis_port)
+        i = My_Redis(host=Redis_ip[0],port=Redis_port,password=Redis_pass)
         i.Redis_set('login','true')
         wxid, wxnewpass = bot.WXCheckLoginQrcode(guid, uuid)
         if wxid:

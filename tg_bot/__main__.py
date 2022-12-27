@@ -3,7 +3,7 @@
 from tg_bot.utils import *
 from tg_bot.start import *
 from utils import My_Redis
-from config import Redis_ip,Redis_port
+from config import Redis_ip,Redis_port,Redis_pass
 
 
 async def hello():
@@ -15,7 +15,7 @@ async def hello():
 
 
 if __name__ == "__main__":
-    i = My_Redis(host=Redis_ip[0], port=Redis_port)
+    i = My_Redis(host=Redis_ip[0], port=Redis_port,password=Redis_pass)
     i.Redis_pipe('login')
     with ipad_bot:
         ipad_bot.loop.create_task(hello())
