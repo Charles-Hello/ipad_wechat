@@ -103,6 +103,9 @@ export OPEN_PROXY=true #这个是控制开启登录地域代理
 export PROXY_IP_ADDRESS=106.53.99.58 #登录地域代理的ip
 export PROXY_IP_PORT=18838  #登录地域代理的端口
 export TGBOT=true #是否开启tgbot
+export REDIS_IP=127.0.0.1 #redis的ip地址
+export REDIS_PROT=6379 #redis的端口
+export REDIS_PASS=123456 #redis的密码
 ```
 
 ## Macos和window本地部署 
