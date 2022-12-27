@@ -213,15 +213,13 @@ main() {
 EOF
     echo "请选择您需要进行的操作:"
     echo "  1) 安装ipad_wechat(中间件)"
-    echo "  2) 安装tg_bot辅助"
-    echo "  3) 退出脚本"
+    echo "  2) 退出脚本"
     echo ""
     echo -n "请输入编号: "
     read N
     case $N in
       1) dispose ;;
-      2) tgbot ;;
-      3) exit ;;
+      2) exit ;;
       *) echo "输入错误！请重新 bash ${name}.sh 启动脚本" ;;
     esac
 }
