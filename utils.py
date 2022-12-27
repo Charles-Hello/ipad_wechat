@@ -31,22 +31,26 @@ def getAuthorization() -> str:
 
 
 class My_Redis:
-    def __init__(self, host: str, port: int,password=None):
-      if password is None:
-        self.r = redis.StrictRedis(host=host, port=port, decode_responses=True)
-      else:
-        self.r = redis.StrictRedis(host=host, port=port,password=password, decode_responses=True)
-        
+    def __init__(self, host: str, port: int, password=None):
+        if password is None:
+            self.r = redis.StrictRedis(
+                host=host, port=port, decode_responses=True)
+        else:
+            self.r = redis.StrictRedis(
+                host=host, port=port, password=password, decode_responses=True)
+
     def Redis_pipe(self, key: str) -> str:
-        with self.r.monitor() as m:
-            for command in m.listen():
-                a = command['command']
-                b = a.split(" ")
-                method = b[0].lower()
-                _key = b[1]
-                if re.findall(r'get|set', method) != [] and _key == key:
-                    return self.r.get(key)
+        try:
+            with self.r.monitor() as m:
+                for command in m.listen():
+                    a = command['command']
+                    b = a.split(" ")
+                    method = b[0].lower()
+                    _key = b[1]
+                    if re.findall(r'get|set', method) != [] and _key == key:
+                        return self.r.get(key)
+        except Exception as e:
+            print(e)
 
     def Redis_set(self, key: str, value: str):
         self.r.set(key, value)
-
