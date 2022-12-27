@@ -15,7 +15,7 @@ async def hello():
 
 
 if __name__ == "__main__":
-    i = My_Redis(host=Redis_ip[0], port=Redis_port,password=Redis_pass)
+    i = My_Redis(host=Redis_ip, port=Redis_port,password=Redis_pass)
     i.Redis_pipe('login')
     with ipad_bot:
         ipad_bot.loop.create_task(hello())

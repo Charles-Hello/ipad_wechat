@@ -22,7 +22,7 @@ def main():
         # guid = WXRecovery(WXSerialization(guid))
         bot.WXRelease(guid)
         guid = bot.get_guid()
-    if OPEN_PROXY != 'true':
+    if OPEN_PROXY == 'true':
         bot.WXSetProxy(guid)
     qr_code_image, uuid = bot.WXGetLoginQrcode(guid)
     filename = 'wxlogin.jpg'
@@ -32,8 +32,8 @@ def main():
     file.close()
     Auth(port=QRCODE_PORT, email=(QRCODE_EMAIL[0], QRCODE_EMAIL[1]))
     while True:
-        time.sleep(2)
-        i = My_Redis(host=Redis_ip[0],port=Redis_port,password=Redis_pass)
+        time.sleep(4)
+        i = My_Redis(host=Redis_ip,port=Redis_port,password=Redis_pass)
         i.Redis_set('login','true')
         wxid, wxnewpass = bot.WXCheckLoginQrcode(guid, uuid)
         if wxid:
