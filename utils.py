@@ -50,7 +50,7 @@ class My_Redis:
                     if re.findall(r'get|set', method) != [] and _key == key:
                         return self.r.get(key)
         except Exception as e:
-            print(e)
+            pass
 
     def Redis_set(self, key: str, value: str):
         self.r.set(key, value)
