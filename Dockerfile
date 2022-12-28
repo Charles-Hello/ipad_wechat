@@ -26,3 +26,5 @@ RUN set -x \
     && echo "Asia/Shanghai" > /etc/timezone \
     && pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple\
     && cd ipad_wechat && pip install -r requirements.txt && cd ..
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
