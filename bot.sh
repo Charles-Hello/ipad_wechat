@@ -5,7 +5,6 @@ door=$dir
 file=docker-compose.yml
 project=ipad_wechat
 docker_yml=$door/$project/$file
-# install_service="redis"
 
 
 _echo(){
@@ -84,32 +83,24 @@ _read(){
 }
 
 
-redis() {
-  local _port=$1
-  _echo -g "开始一键安装$install_service"
-  docker pull redis:latest
-  # check_net=`docker network ls |grep -E 'mynet'|awk '{print $1}'`
-#   if [ -z $check_net ]; then
-#     docker network create --subnet=172.100.0.0/16 mynet1
-# fi
-  check_git_file
-  docker run -p "${_port}":6379 --name redis -v /redis/redis.conf:/etc/redis/redis.conf  -v /redis/data:/data -d redis redis-server /etc/redis/redis.conf --appendonly yes
-#   port=$(docker exec -it redis cat /etc/hosts |grep 172|awk '{print $1}')
-
-#   sed -i "s/test/$port:6379/g" $door/$project/NolanChat/Config/Redis.json
-  _echo -g "${install_service}安装成功！"
-  cat << EOF
-**************************************
-*       安装${install_service}成功         *
-*       端口为${_port}         *
-**************************************
-EOF
-}
 
 check_git_file(){
   if [ ! -d "$project" ]; then
-  _echo "检测到ipad_wechat文件不存在，正在拉取！"
-  git clone https://github.com/Charles-Hello/ipad_wechat.git
+  _read "检测到ipad_wechat文件不存在，是否需要拉取！(默认: y) [y/n]:"
+  local k="${inputInfo}"
+  [ -z "${k}" ] && k="N"
+  case "${k:0:1}" in
+      y|Y)
+          _echo -g "正在为你拉取!"
+          git clone https://github.com/Charles-Hello/ipad_wechat.git
+          ;;
+      n|N)
+          _echo -e "取消拉取最新库!"
+          ;;
+      *)
+          _echo -e "输入有误，请重新输入!"
+          ;;
+  esac
 else
   _read "检测到ipad_wechat文件已存在，是否还需要拉取更新最新版本(默认: n) [y/n]: "
   local get_input="${inputInfo}"
@@ -131,34 +122,60 @@ fi
 }
 
 dispose(){
-  check_git_file
+  # check_git_file
 #   _echo  "正在检查${install_service}状态!"
 #   init_check 6379
   content=$(sed -n "47p" "$docker_yml")
-  result=$(echo $content | grep "106.53.99.51")
+  result=$(echo $content | grep "121212")
   if [[ $result != "" ]]; then
     _echo -g  "$file没有改动,请你改动一下。"
     sleep 1
     _echo -g  "$file修改完了之后，直接再次运行一键命令即可"
     sleep 3
     vi "$docker_yml"
-  else
-    _echo -g  "检测到已经改动$file内容"
-    cd "$door"/$project || exit
-    _echo -g  "开始搭建$project"
-    docker-compose up -d
-    docker-compose logs #以后写check
-    echo ""
-    _echo -g  "$project已搭建完成！"
-    echo ""
-    _echo -g "根据提示输入命令进入容器，再次输入以下命令执行，登陆成功后CTRL+c退出即可"
-    _echo -g  "docker exec -it $project bash "
-    _echo -g "如果需要开启tg_bot请自行修改$door/$project/tg_bot/bot.json文件(否则忽略这句话，直接执行以下代码即可)"
-    _echo -g  "nohup  python3 -m $project  > wechat.log  2>&1 &"
-    _echo -g "tail -f wechat.log"
-
   fi
+  content=$(sed -n "4p" "$door/$project/tg_bot/bot.json")
+  result=$(echo "$content" | grep "1123121218")
+  if [[ $result != "" ]]; then
+      _read "是否需要安装tgbot控制(默认: n) [y/n]: "
+  local get_input="${inputInfo}"
+  [ -z "${get_input}" ] && get_input="N"
+  case "${get_input:0:1}" in
+      y|Y)
+          _echo -g "请填写bot.json对应的内容"
+          sleep 3
+          vi "$door/$project/tg_bot/bot.json"
+          ;;
+      n|N)
+          _echo -e "取消"
+          ;;
+      *)
+          _echo -e "输入有误，请重新输入!"
+          ;;
+  esac
+    vi "$door/$project/tg_bot/bot.json"
+  else
+    _echo -g  "检测到已经改动$door/$project/tg_bot/bot.json内容"
+  fi
+
+  cd "$door"/$project || exit
+  _echo -g  "开始搭建$project"
+  # # chmod +x docker-entrypoint.sh
+  docker-compose up -d
+  docker-compose logs #以后写check
+  echo ""
+  _echo -g  "$project已搭建完成！"
+  echo ""
+  # # docker exec -it $project bash tail -f wechat.log
+  _echo -g "如需卸载请前往ipad_wechat文件夹使用docker-compose down即可"
+  _echo -g "如需查看log请前往ipad_wechat文件夹使用docker-compose logs"
+  # _echo -g  "docker exec -it $project bash "
+  # _echo -g "如果需要开启tg_bot请自行修改$door/$project/tg_bot/bot.json文件(否则忽略这句话，直接执行以下代码即可)"
+  # _echo -g  "nohup  python3 -m $project  > wechat.log  2>&1 &"
+  # _echo -g "tail -f wechat.log"
+
 }
+
 
 
 
