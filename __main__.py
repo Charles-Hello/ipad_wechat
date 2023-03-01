@@ -1,14 +1,18 @@
 import base64
 import time
-import schedule
 import subprocess
+import time
+import threading
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from ipad_wechat.config import *
 from ipad_wechat.expand import getsize, get_guid_id
 from ipad_wechat.IPad_qrcode.Auth import Auth
 from ipad_wechat.common import we_bot
 from ipad_wechat.utils import getAuthorization,My_Redis
+
+
+
 
 
 def main():
@@ -40,15 +44,15 @@ def main():
             bot.WXSecLoginManual(guid, wxid, wxnewpass)
             bot.addserver(guid, CALL_BACK_IP)
             bot.Heartbeat(guid)
-            scheduler = AsyncIOScheduler()
-            scheduler.add_job(bot.Heartbeat, trigger='interval', seconds=Heartbeat_cycle,
-                              args=[guid])  # 每隔5s执行一次func
-            scheduler.start()
-            while True:
-                schedule.run_pending()  # 运行所有可运行的任务
-                time.sleep(Token_cycle)
-                bot.TO_get_token(getAuthorization)
+            
+            def createTimer():
+                t = threading.Timer(Heartbeat_cycle, repeat)
+                t.start()
 
-
+            def repeat():
+                bot.TO_get_token(getAuthorization())
+                bot.Heartbeat(guid)
+                createTimer()
+            createTimer()
 if __name__ == "__main__":
     main()
